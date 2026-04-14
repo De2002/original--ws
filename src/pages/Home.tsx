@@ -61,13 +61,13 @@ export default function Home() {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden rounded-3xl bg-primary text-primary-foreground">
+      <section className="relative py-12 sm:py-16 lg:py-20 overflow-hidden rounded-2xl sm:rounded-3xl bg-primary text-primary-foreground">
         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]"></div>
-        <div className="relative container mx-auto px-8 text-center space-y-8">
+        <div className="relative container mx-auto px-4 sm:px-8 text-center space-y-6 sm:space-y-8">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-7xl font-serif font-bold tracking-tight"
+            className="text-3xl sm:text-5xl md:text-7xl font-serif font-bold tracking-tight leading-tight"
           >
             Where Every Word <br /> <span className="italic text-sky-300">Resonates</span>
           </motion.h1>
@@ -75,7 +75,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-xl text-primary-foreground/80 max-w-2xl mx-auto font-sans"
+            className="text-base sm:text-xl text-primary-foreground/80 max-w-2xl mx-auto font-sans"
           >
             Wordstack is a modern classic poetry library built around discovery, comprehension, and atmosphere.
           </motion.p>
@@ -100,7 +100,7 @@ export default function Home() {
 
       {/* Featured Poem of the Day */}
       {featuredPoem && (
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -111,13 +111,13 @@ export default function Home() {
               <Sparkles size={18} />
               Poem of the Day
             </div>
-            <h2 className="text-4xl md:text-5xl font-serif font-bold">{featuredPoem.title}</h2>
-            <p className="text-xl text-muted-foreground italic">by {featuredPoem.poetName}</p>
-            <div className="poem-content text-lg line-clamp-6 opacity-80">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold break-words">{featuredPoem.title}</h2>
+            <p className="text-lg sm:text-xl text-muted-foreground italic">by {featuredPoem.poetName}</p>
+            <div className="poem-content text-base sm:text-lg line-clamp-6 opacity-80 break-words">
               {featuredPoem.content}
             </div>
             <Link to={`/poem/${featuredPoem.id}`}>
-              <Button className="group gap-2 px-8 py-6 text-lg">
+              <Button className="group gap-2 px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg w-full sm:w-auto">
                 Read Full Poem
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </Button>
@@ -143,17 +143,17 @@ export default function Home() {
       {/* Era-based Browsing */}
       <section className="space-y-8">
         <div className="flex items-center justify-between">
-          <h3 className="text-3xl font-serif font-bold">Browse by Era</h3>
+          <h3 className="text-2xl sm:text-3xl font-serif font-bold">Browse by Era</h3>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {ERAS.map((era) => (
             <Link key={era.name} to={`/search?era=${era.name}`}>
               <Card className={`hover:scale-105 transition-transform cursor-pointer border-none ${era.color}`}>
-                <CardContent className="p-6 flex flex-col items-center gap-4">
+                <CardContent className="p-4 sm:p-6 flex flex-col items-center gap-3 sm:gap-4">
                   <div className="p-4 bg-white/20 rounded-full">
                     {era.icon}
                   </div>
-                  <span className="font-bold text-lg">{era.name}</span>
+                  <span className="font-bold text-base sm:text-lg text-center">{era.name}</span>
                 </CardContent>
               </Card>
             </Link>
@@ -164,7 +164,7 @@ export default function Home() {
       {/* Popular Classics */}
       <section className="space-y-8">
         <div className="flex items-center justify-between">
-          <h3 className="text-3xl font-serif font-bold">Popular Classics</h3>
+          <h3 className="text-2xl sm:text-3xl font-serif font-bold">Popular Classics</h3>
           <Link to="/search" className="text-primary font-medium flex items-center gap-1 hover:underline">
             View All <ArrowRight size={16} />
           </Link>
@@ -205,7 +205,7 @@ export default function Home() {
       {/* Famous Poets */}
       <section className="space-y-8">
         <div className="flex items-center justify-between">
-          <h3 className="text-3xl font-serif font-bold">Famous Poets</h3>
+          <h3 className="text-2xl sm:text-3xl font-serif font-bold">Famous Poets</h3>
           <Link to="/search?type=poet" className="text-primary font-medium flex items-center gap-1 hover:underline">
             View All <ArrowRight size={16} />
           </Link>
@@ -240,8 +240,8 @@ export default function Home() {
       </section>
 
       {/* Mood-based Discovery */}
-      <section className="bg-muted/30 rounded-3xl p-12 text-center space-y-8">
-        <h3 className="text-3xl font-serif font-bold">How are you feeling?</h3>
+      <section className="bg-muted/30 rounded-2xl sm:rounded-3xl p-6 sm:p-12 text-center space-y-6 sm:space-y-8">
+        <h3 className="text-2xl sm:text-3xl font-serif font-bold">How are you feeling?</h3>
         <p className="text-muted-foreground">Discover poems that match your current mood.</p>
         <div className="flex flex-wrap justify-center gap-4">
           {MOODS.map((mood) => (

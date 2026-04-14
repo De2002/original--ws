@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Calendar, History, Quote, BookOpen, ChevronRight, ArrowLeft, Globe, MapPin } from 'lucide-react';
+import { Calendar, History, Quote, BookOpen, ChevronRight, ArrowLeft, Globe } from 'lucide-react';
 import { db, doc, getDoc, collection, query, where, getDocs } from '@/lib/firebase';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -82,7 +82,7 @@ export default function PoetDetail() {
           <Link to="/" className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors mb-4">
             <ArrowLeft size={16} /> Back to Library
           </Link>
-          <h1 className="text-5xl md:text-7xl font-serif font-bold tracking-tight">{poet.name}</h1>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold tracking-tight break-words">{poet.name}</h1>
           <div className="flex flex-wrap gap-4 text-muted-foreground font-medium">
             <span className="flex items-center gap-2"><Calendar size={18} /> {poet.birthDate} — {poet.deathDate}</span>
             <span className="flex items-center gap-2"><History size={18} /> {poet.era} Era</span>
@@ -99,11 +99,11 @@ export default function PoetDetail() {
 
       {/* Detailed Info Tabs */}
       <Tabs defaultValue="bio" className="w-full">
-        <TabsList className="w-full justify-start rounded-none bg-transparent border-b h-14 gap-8">
-          <TabsTrigger value="bio" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 text-lg font-bold">Biography</TabsTrigger>
-          <TabsTrigger value="poems" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 text-lg font-bold">Poems ({poems.length})</TabsTrigger>
-          <TabsTrigger value="influence" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 text-lg font-bold">Influence</TabsTrigger>
-          <TabsTrigger value="timeline" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 text-lg font-bold">Timeline</TabsTrigger>
+        <TabsList className="w-full justify-start rounded-none bg-transparent border-b h-auto min-h-14 gap-6 sm:gap-8 overflow-x-auto whitespace-nowrap">
+          <TabsTrigger value="bio" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 text-base sm:text-lg font-bold shrink-0">Biography</TabsTrigger>
+          <TabsTrigger value="poems" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 text-base sm:text-lg font-bold shrink-0">Poems ({poems.length})</TabsTrigger>
+          <TabsTrigger value="influence" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 text-base sm:text-lg font-bold shrink-0">Influence</TabsTrigger>
+          <TabsTrigger value="timeline" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 text-base sm:text-lg font-bold shrink-0">Timeline</TabsTrigger>
         </TabsList>
 
         <div className="py-12">

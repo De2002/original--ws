@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Play, Pause, Share2, Settings2, Sparkles, BookOpen, ListTree, History, MessageSquare, ChevronRight, ArrowLeft, Type, AlignLeft } from 'lucide-react';
+import { Play, Share2, Settings2, Sparkles, BookOpen, ListTree, History, MessageSquare, ChevronRight, ArrowLeft, Type, AlignLeft } from 'lucide-react';
 import { db, doc, getDoc, collection, query, where, limit, getDocs } from '@/lib/firebase';
 import { analyzePoem, askAboutPoem, PoemAnalysis } from '@/lib/gemini';
 import { Button } from '@/components/ui/button';
@@ -133,7 +133,7 @@ export default function PoemDetail() {
           <Link to="/" className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors mb-4">
             <ArrowLeft size={16} /> Back to Library
           </Link>
-          <h1 className="text-4xl md:text-6xl font-serif font-bold tracking-tight">{poem.title}</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-serif font-bold tracking-tight break-words">{poem.title}</h1>
           <Link to={`/poet/${poem.poetId}`} className="text-2xl text-primary font-serif italic hover:underline block">
             by {poem.poetName}
           </Link>
@@ -146,7 +146,7 @@ export default function PoemDetail() {
           </div>
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <Button variant="outline" size="icon" onClick={() => setShowSettings(!showSettings)} className={showSettings ? 'bg-primary text-primary-foreground' : ''}>
             <Settings2 size={20} />
           </Button>
@@ -234,10 +234,10 @@ export default function PoemDetail() {
               <CardContent className="p-0">
                 {analysis ? (
                   <Tabs defaultValue="summary" className="w-full">
-                    <TabsList className="w-full rounded-none bg-muted/50 h-12">
-                      <TabsTrigger value="summary" className="flex-1 gap-1"><BookOpen size={14} /> Summary</TabsTrigger>
-                      <TabsTrigger value="lines" className="flex-1 gap-1"><ListTree size={14} /> Lines</TabsTrigger>
-                      <TabsTrigger value="context" className="flex-1 gap-1"><History size={14} /> Context</TabsTrigger>
+                    <TabsList className="w-full rounded-none bg-muted/50 h-auto min-h-12 overflow-x-auto whitespace-nowrap">
+                      <TabsTrigger value="summary" className="flex-1 gap-1 min-w-[110px]"><BookOpen size={14} /> Summary</TabsTrigger>
+                      <TabsTrigger value="lines" className="flex-1 gap-1 min-w-[95px]"><ListTree size={14} /> Lines</TabsTrigger>
+                      <TabsTrigger value="context" className="flex-1 gap-1 min-w-[110px]"><History size={14} /> Context</TabsTrigger>
                     </TabsList>
                     <ScrollArea className="h-[400px]">
                       <div className="p-6">

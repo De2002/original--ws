@@ -40,12 +40,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-background text-foreground font-sans transition-colors duration-300">
       {/* Navigation */}
       <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground group-hover:scale-110 transition-transform">
+        <div className="container mx-auto px-3 sm:px-4 h-16 flex items-center justify-between gap-2">
+          <Link to="/" className="flex items-center gap-2 group min-w-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground group-hover:scale-110 transition-transform shrink-0">
               <BookOpen size={24} />
             </div>
-            <span className="text-2xl font-serif font-bold tracking-tight text-primary">Wordstack</span>
+            <span className="text-xl sm:text-2xl font-serif font-bold tracking-tight text-primary truncate">Wordstack</span>
           </Link>
 
           {/* Desktop Search */}
@@ -123,7 +123,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
       </nav>
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
         {children}
       </main>
 
