@@ -1,0 +1,80 @@
+{
+  "entities": {
+    "Poet": {
+      "title": "Poet",
+      "description": "A famous poet in the library.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Full name of the poet." },
+        "bio": { "type": "string", "description": "Biography of the poet." },
+        "birthDate": { "type": "string", "description": "Birth date or year." },
+        "deathDate": { "type": "string", "description": "Death date or year." },
+        "era": { "type": "string", "description": "The era they belonged to (e.g., Romantic, Victorian)." },
+        "style": { "type": "string", "description": "Writing style description." },
+        "influence": { "type": "string", "description": "Influence on literature." },
+        "imageUrl": { "type": "string", "description": "URL to the poet's portrait." },
+        "timeline": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "year": { "type": "string" },
+              "event": { "type": "string" }
+            }
+          }
+        }
+      },
+      "required": ["name", "bio", "era"]
+    },
+    "Poem": {
+      "title": "Poem",
+      "description": "A classic poem in the library.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "Title of the poem." },
+        "content": { "type": "string", "description": "The full text of the poem." },
+        "poetId": { "type": "string", "description": "ID of the poet who wrote it." },
+        "poetName": { "type": "string", "description": "Name of the poet (denormalized)." },
+        "era": { "type": "string", "description": "Era of the poem." },
+        "themes": { "type": "array", "items": { "type": "string" } },
+        "mood": { "type": "string", "description": "The mood/feeling of the poem." },
+        "imageUrl": { "type": "string", "description": "Cover image for the poem." },
+        "audioUrl": { "type": "string", "description": "Optional audio reading URL." },
+        "analysisCache": {
+          "type": "object",
+          "properties": {
+            "summary": { "type": "string" },
+            "lineByLine": { "type": "string" },
+            "themes": { "type": "string" },
+            "historicalContext": { "type": "string" }
+          }
+        }
+      },
+      "required": ["title", "content", "poetId", "poetName"]
+    },
+    "User": {
+      "title": "User",
+      "description": "An admin user of the system.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "viewer"] }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/poets/{poetId}": {
+      "schema": "Poet",
+      "description": "Collection of poets."
+    },
+    "/poems/{poemId}": {
+      "schema": "Poem",
+      "description": "Collection of poems."
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Admin users."
+    }
+  }
+}
