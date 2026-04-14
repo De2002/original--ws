@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Search as SearchIcon, Filter, BookOpen, User, ArrowRight, X } from 'lucide-react';
-import { db, collection, getDocs, query, where, orderBy } from '@/lib/firebase';
+import { Search as SearchIcon, BookOpen, ArrowRight, X } from 'lucide-react';
+import { db, collection, getDocs, query, where } from '@/lib/firebase';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -90,23 +90,23 @@ export default function Search() {
   };
 
   return (
-    <div className="space-y-12 pb-20">
+    <div className="space-y-10 sm:space-y-12 pb-20">
       <Helmet>
         <title>Search Poems & Poets | Wordstack</title>
       </Helmet>
 
       {/* Search Header */}
       <div className="space-y-6">
-        <h1 className="text-4xl font-serif font-bold">Search Library</h1>
-        <form onSubmit={handleSearch} className="relative max-w-2xl">
+        <h1 className="text-3xl sm:text-4xl font-serif font-bold">Search Library</h1>
+        <form onSubmit={handleSearch} className="relative max-w-2xl space-y-3 sm:space-y-0">
           <Input 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by title, line, or poet..."
-            className="h-14 pl-12 text-lg rounded-2xl shadow-sm"
+            className="h-12 sm:h-14 pl-11 sm:pl-12 pr-3 sm:pr-28 text-base sm:text-lg rounded-2xl shadow-sm"
           />
-          <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
-          <Button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl">Search</Button>
+          <SearchIcon className="absolute left-4 top-6 sm:top-1/2 sm:-translate-y-1/2 text-muted-foreground" size={20} />
+          <Button type="submit" className="w-full sm:w-auto sm:absolute sm:right-2 sm:top-1/2 sm:-translate-y-1/2 rounded-xl">Search</Button>
         </form>
 
         {/* Active Filters */}
@@ -130,11 +130,11 @@ export default function Search() {
       </div>
 
       <Tabs defaultValue={typeParam === 'poet' ? 'poets' : 'poems'} className="w-full">
-        <TabsList className="bg-transparent border-b rounded-none w-full justify-start h-12 gap-8">
-          <TabsTrigger value="poems" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 font-bold text-lg">
+        <TabsList className="bg-transparent border-b rounded-none w-full justify-start h-auto min-h-12 gap-6 sm:gap-8 overflow-x-auto whitespace-nowrap">
+          <TabsTrigger value="poems" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 font-bold text-base sm:text-lg shrink-0">
             Poems ({poems.length})
           </TabsTrigger>
-          <TabsTrigger value="poets" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 font-bold text-lg">
+          <TabsTrigger value="poets" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 font-bold text-base sm:text-lg shrink-0">
             Poets ({poets.length})
           </TabsTrigger>
         </TabsList>

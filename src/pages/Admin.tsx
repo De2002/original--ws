@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
-import { Plus, Edit2, Trash2, Save, X, LogIn, LayoutDashboard, BookOpen, User as UserIcon, Database } from 'lucide-react';
+import { Plus, Edit2, Trash2, Save, LogIn, LayoutDashboard, BookOpen, User as UserIcon, Database } from 'lucide-react';
 import { auth, db, signInWithPopup, googleProvider, signOut, onAuthStateChanged, FirebaseUser, collection, getDocs, setDoc, doc, deleteDoc, query, orderBy } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -220,29 +219,29 @@ That kept so many warm -`,
 
   return (
     <div className="space-y-12 pb-20">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
           <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-primary-foreground">
             <LayoutDashboard size={24} />
           </div>
-          <h1 className="text-4xl font-serif font-bold">Admin Dashboard</h1>
+          <h1 className="text-3xl sm:text-4xl font-serif font-bold truncate">Admin Dashboard</h1>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={seedData}>Seed Data</Button>
-          <Button variant="ghost" onClick={() => signOut(auth)}>Sign Out</Button>
+        <div className="flex flex-col sm:flex-row gap-2 sm:justify-end">
+          <Button variant="outline" onClick={seedData} className="w-full sm:w-auto">Seed Data</Button>
+          <Button variant="ghost" onClick={() => signOut(auth)} className="w-full sm:w-auto">Sign Out</Button>
         </div>
       </div>
 
       <Tabs defaultValue="poems">
-        <TabsList className="w-full justify-start h-12 bg-muted/50 rounded-xl p-1">
-          <TabsTrigger value="poems" className="flex-1 gap-2"><BookOpen size={18} /> Poems</TabsTrigger>
-          <TabsTrigger value="poets" className="flex-1 gap-2"><UserIcon size={18} /> Poets</TabsTrigger>
+        <TabsList className="w-full justify-start h-auto min-h-12 bg-muted/50 rounded-xl p-1 overflow-x-auto whitespace-nowrap">
+          <TabsTrigger value="poems" className="flex-1 gap-2 min-w-[130px]"><BookOpen size={18} /> Poems</TabsTrigger>
+          <TabsTrigger value="poets" className="flex-1 gap-2 min-w-[130px]"><UserIcon size={18} /> Poets</TabsTrigger>
         </TabsList>
 
         <TabsContent value="poems" className="pt-8 space-y-8">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold">Manage Poems</h2>
-            <Button onClick={() => { setEditingPoem(null); setShowPoemForm(true); }} className="gap-2">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+            <h2 className="text-xl sm:text-2xl font-bold">Manage Poems</h2>
+            <Button onClick={() => { setEditingPoem(null); setShowPoemForm(true); }} className="gap-2 w-full sm:w-auto">
               <Plus size={18} /> Add Poem
             </Button>
           </div>
@@ -285,9 +284,9 @@ That kept so many warm -`,
                     <label className="text-sm font-bold">Image URL</label>
                     <Input name="imageUrl" defaultValue={editingPoem?.imageUrl} />
                   </div>
-                  <div className="flex gap-2 md:col-span-2 pt-4">
-                    <Button type="submit" className="gap-2"><Save size={18} /> Save Poem</Button>
-                    <Button type="button" variant="ghost" onClick={() => setShowPoemForm(false)}>Cancel</Button>
+                  <div className="flex flex-col sm:flex-row gap-2 md:col-span-2 pt-4">
+                    <Button type="submit" className="gap-2 w-full sm:w-auto"><Save size={18} /> Save Poem</Button>
+                    <Button type="button" variant="ghost" onClick={() => setShowPoemForm(false)} className="w-full sm:w-auto">Cancel</Button>
                   </div>
                 </form>
               </CardContent>
@@ -311,9 +310,9 @@ That kept so many warm -`,
         </TabsContent>
 
         <TabsContent value="poets" className="pt-8 space-y-8">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold">Manage Poets</h2>
-            <Button onClick={() => { setEditingPoet(null); setShowPoetForm(true); }} className="gap-2">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+            <h2 className="text-xl sm:text-2xl font-bold">Manage Poets</h2>
+            <Button onClick={() => { setEditingPoet(null); setShowPoetForm(true); }} className="gap-2 w-full sm:w-auto">
               <Plus size={18} /> Add Poet
             </Button>
           </div>
@@ -357,9 +356,9 @@ That kept so many warm -`,
                     <label className="text-sm font-bold">Image URL</label>
                     <Input name="imageUrl" defaultValue={editingPoet?.imageUrl} />
                   </div>
-                  <div className="flex gap-2 md:col-span-2 pt-4">
-                    <Button type="submit" className="gap-2"><Save size={18} /> Save Poet</Button>
-                    <Button type="button" variant="ghost" onClick={() => setShowPoetForm(false)}>Cancel</Button>
+                  <div className="flex flex-col sm:flex-row gap-2 md:col-span-2 pt-4">
+                    <Button type="submit" className="gap-2 w-full sm:w-auto"><Save size={18} /> Save Poet</Button>
+                    <Button type="button" variant="ghost" onClick={() => setShowPoetForm(false)} className="w-full sm:w-auto">Cancel</Button>
                   </div>
                 </form>
               </CardContent>
