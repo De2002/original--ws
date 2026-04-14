@@ -5,7 +5,7 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { Toaster } from '@/components/ui/sonner';
+import { Toaster } from 'sonner';
 import Layout from '@/components/Layout';
 import Home from '@/pages/Home';
 import PoemDetail from '@/pages/PoemDetail';
@@ -31,4 +31,3 @@ export default function App() {
     </HelmetProvider>
   );
 }
-
