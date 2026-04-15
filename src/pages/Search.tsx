@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Search as SearchIcon, BookOpen, ArrowRight, X } from 'lucide-react';
+import { Search as SearchIcon, BookOpen, ArrowRight, X, BarChart3, ExternalLink, Rss } from 'lucide-react';
 import { db, collection, getDocs, query, where } from '@/lib/firebase';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,60 @@ export default function Search() {
   const [searchQuery, setSearchQuery] = useState(queryParam);
   const [poems, setPoems] = useState<any[]>([]);
   const [poets, setPoets] = useState<any[]>([]);
+  const [analysisArticles, setAnalysisArticles] = useState<Array<{ url: string; title: string; publishedAt?: string }>>([]);
+  const [analysisLoading, setAnalysisLoading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const isAnalysisMode = queryParam.trim().toLowerCase() === 'analysis';
+
+  const toHumanTitleFromUrl = (url: string) => {
+    const clean = url.replace(/\/$/, '');
+    const slug = clean.split('/').pop() || '';
+    return slug
+      .replace(/[-_]+/g, ' ')
+      .replace(/\b\w/g, (match) => match.toUpperCase());
+  };
+
+  useEffect(() => {
+    async function fetchAnalysisFeed() {
+      if (!isAnalysisMode) {
+        setAnalysisArticles([]);
+        return;
+      }
+
+      setAnalysisLoading(true);
+      try {
+        const response = await fetch('https://analysis.wordstack.io/sitemap-posts.xml');
+        const xmlText = await response.text();
+        const xml = new DOMParser().parseFromString(xmlText, 'application/xml');
+        const parseError = xml.querySelector('parsererror');
+
+        if (parseError) {
+          throw new Error('Invalid sitemap XML');
+        }
+
+        const urlNodes = Array.from(xml.querySelectorAll('url'));
+        const articles = urlNodes
+          .map((node) => ({
+            url: node.querySelector('loc')?.textContent?.trim() || '',
+            publishedAt: node.querySelector('lastmod')?.textContent?.trim() || undefined,
+          }))
+          .filter((item) => item.url)
+          .map((item) => ({
+            ...item,
+            title: toHumanTitleFromUrl(item.url),
+          }));
+
+        setAnalysisArticles(articles);
+      } catch (error) {
+        console.error('Analysis feed error:', error);
+        setAnalysisArticles([]);
+      } finally {
+        setAnalysisLoading(false);
+      }
+    }
+
+    fetchAnalysisFeed();
+  }, [isAnalysisMode]);
 
   useEffect(() => {
     async function performSearch() {
@@ -129,6 +182,72 @@ export default function Search() {
         </div>
       </div>
 
+      {isAnalysisMode ? (
+        <section className="space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+              <BarChart3 size={20} />
+            </div>
+            <div>
+              <h2 className="text-2xl font-serif font-bold">Analysis Feed</h2>
+              <p className="text-sm text-muted-foreground flex items-center gap-2">
+                <Rss size={14} />
+                Live articles from analysis.wordstack.io
+              </p>
+            </div>
+          </div>
+
+          {analysisLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {Array(6).fill(0).map((_, i) => <Skeleton key={i} className="h-36 rounded-2xl" />)}
+            </div>
+          ) : analysisArticles.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {analysisArticles.map((article) => (
+                <a
+                  key={article.url}
+                  href={article.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group"
+                >
+                  <Card className="h-full border-none shadow-md hover:shadow-xl transition-all bg-gradient-to-b from-card to-muted/20">
+                    <CardContent className="p-6 space-y-3">
+                      <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 px-3 py-1 text-[11px] font-semibold text-primary">
+                        <Rss size={12} />
+                        ANALYSIS
+                      </div>
+                      <h3 className="text-xl font-serif font-bold leading-snug group-hover:text-primary transition-colors">
+                        {article.title}
+                      </h3>
+                      {article.publishedAt && (
+                        <p className="text-sm text-muted-foreground">
+                          {new Date(article.publishedAt).toLocaleDateString()}
+                        </p>
+                      )}
+                      <div className="flex items-center gap-1 text-primary font-bold text-xs pt-1">
+                        READ ARTICLE <ExternalLink size={14} />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 bg-muted/20 rounded-3xl space-y-2">
+              <p className="text-xl text-muted-foreground">No analysis articles available right now.</p>
+              <a
+                href="https://analysis.wordstack.io/sitemap-posts.xml"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary font-medium hover:underline inline-flex items-center gap-2"
+              >
+                Open sitemap feed directly <ExternalLink size={16} />
+              </a>
+            </div>
+          )}
+        </section>
+      ) : (
       <Tabs defaultValue={typeParam === 'poet' ? 'poets' : 'poems'} className="w-full">
         <TabsList className="bg-transparent border-b rounded-none w-full justify-start h-auto min-h-12 gap-6 sm:gap-8 overflow-x-auto whitespace-nowrap">
           <TabsTrigger value="poems" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 font-bold text-base sm:text-lg shrink-0">
@@ -207,6 +326,7 @@ export default function Search() {
           </TabsContent>
         </div>
       </Tabs>
+      )}
     </div>
   );
 }
