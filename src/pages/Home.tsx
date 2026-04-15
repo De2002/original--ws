@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Search, ArrowRight, Sparkles, Wind, Heart, Skull, Shield, Zap, History, Clock, Globe } from 'lucide-react';
 import { db, collection, getDocs, query, limit, orderBy } from '@/lib/firebase';
@@ -27,9 +27,12 @@ const THEMES = [
 const MOODS = ['Melancholic', 'Joyful', 'Pensive', 'Heroic', 'Serene', 'Dark'];
 
 export default function Home() {
+  const navigate = useNavigate();
   const [featuredPoem, setFeaturedPoem] = useState<any>(null);
   const [popularPoems, setPopularPoems] = useState<any[]>([]);
   const [famousPoets, setFamousPoets] = useState<any[]>([]);
+  const [searchInput, setSearchInput] = useState('');
+  const [searchCategory, setSearchCategory] = useState<'poems' | 'lines' | 'poets'>('poems');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -52,6 +55,39 @@ export default function Home() {
     }
     fetchData();
   }, []);
+
+  const autocompleteSuggestions = React.useMemo(() => {
+    if (!searchInput.trim()) return [];
+    const q = searchInput.toLowerCase();
+
+    const poemSuggestions = popularPoems
+      .flatMap((poem) => [poem.title, poem.content])
+      .filter((value): value is string => Boolean(value))
+      .filter((value) => value.toLowerCase().includes(q));
+
+    const poetSuggestions = famousPoets
+      .map((poet) => poet.name)
+      .filter((value): value is string => Boolean(value))
+      .filter((value) => value.toLowerCase().includes(q));
+
+    const byCategory = searchCategory === 'poets'
+      ? poetSuggestions
+      : [...poemSuggestions, ...poetSuggestions];
+
+    return Array.from(new Set(byCategory)).slice(0, 8);
+  }, [famousPoets, popularPoems, searchCategory, searchInput]);
+
+  const handleHomepageSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const queryValue = searchInput.trim();
+    if (!queryValue) return;
+
+    const params = new URLSearchParams({ q: queryValue });
+    if (searchCategory === 'poets') {
+      params.set('type', 'poet');
+    }
+    navigate(`/search?${params.toString()}`);
+  };
 
   return (
     <div className="space-y-16 pb-16">
@@ -96,6 +132,62 @@ export default function Home() {
             ))}
           </motion.div>
         </div>
+      </section>
+
+      {/* Search Engine Card */}
+      <section>
+        <Card className="border-none shadow-xl bg-gradient-to-b from-card to-muted/20">
+          <CardContent className="p-6 sm:p-8 space-y-6">
+            <div className="space-y-2">
+              <p className="text-primary font-bold uppercase tracking-widest text-sm">Search Engine</p>
+              <h2 className="text-2xl sm:text-3xl font-serif font-bold">Find any poem, line, or poet in seconds</h2>
+              <p className="text-muted-foreground">
+                Start with a keyword and choose where to search. Autocomplete helps you land on the right result faster.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {(['poems', 'lines', 'poets'] as const).map((category) => (
+                <Button
+                  key={category}
+                  type="button"
+                  variant={searchCategory === category ? 'default' : 'outline'}
+                  className="capitalize rounded-full px-5"
+                  onClick={() => setSearchCategory(category)}
+                >
+                  Search in {category}
+                </Button>
+              ))}
+            </div>
+
+            <form onSubmit={handleHomepageSearch} className="space-y-4">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                <input
+                  type="text"
+                  list="home-search-suggestions"
+                  placeholder={
+                    searchCategory === 'poets'
+                      ? 'Try: Emily Dickinson, Walt Whitman...'
+                      : 'Try: The Raven, hope is the thing with feathers...'
+                  }
+                  value={searchInput}
+                  onChange={(event) => setSearchInput(event.target.value)}
+                  className="w-full h-12 rounded-xl border bg-background pl-11 pr-4 text-base outline-none ring-0 focus:border-primary"
+                />
+                <datalist id="home-search-suggestions">
+                  {autocompleteSuggestions.map((suggestion) => (
+                    <option key={suggestion} value={suggestion} />
+                  ))}
+                </datalist>
+              </div>
+              <Button type="submit" className="w-full sm:w-auto gap-2">
+                Search {searchCategory}
+                <ArrowRight size={16} />
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </section>
 
       {/* Featured Poem of the Day */}
