@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, Menu, X, Moon, Sun, BookOpen, User, Settings } from 'lucide-react';
+import { Search, Menu, X, Moon, Sun, BookOpen, User, Settings, Home, PenLine, BarChart3, CircleHelp, CircleUserRound } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -35,6 +35,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       setIsMenuOpen(false);
     }
   };
+
+  const mobileBottomNavItems = [
+    { label: 'For You', to: '/', icon: Home },
+    { label: 'Thoughts', to: '/search?q=thoughts', icon: PenLine },
+    { label: 'Analysis', to: '/search?q=analysis', icon: BarChart3 },
+    { label: 'Q and A', to: '/search?q=questions', icon: CircleHelp },
+    { label: 'Account', to: user ? '/admin' : '/admin', icon: CircleUserRound },
+  ];
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans transition-colors duration-300">
@@ -123,7 +131,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
       </nav>
 
-      <main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
+      <main className="container mx-auto px-3 sm:px-4 py-6 pb-24 sm:pb-8 sm:py-8">
         {children}
       </main>
 
@@ -162,6 +170,33 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           © {new Date().getFullYear()} Wordstack. Built with passion for poetry.
         </div>
       </footer>
+
+      <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/90 md:hidden">
+        <div className="grid h-16 grid-cols-5">
+          {mobileBottomNavItems.map((item) => {
+            const [itemPath, itemQuery = ''] = item.to.split('?');
+            const currentPath = location.pathname;
+            const currentQuery = location.search.replace(/^\?/, '');
+            const isActive = itemPath === '/'
+              ? currentPath === '/'
+              : currentPath === itemPath && (!itemQuery || itemQuery === currentQuery);
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.label}
+                to={item.to}
+                className={cn(
+                  'flex flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors',
+                  isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
+                )}
+              >
+                <Icon size={18} />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
     </div>
   );
 }
