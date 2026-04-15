@@ -39,7 +39,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const mobileBottomNavItems = [
     { label: 'For You', to: '/', icon: Home },
     { label: 'Thoughts', to: '/search?q=thoughts', icon: PenLine },
-    { label: 'Analysis', to: '/search?q=analysis', icon: BarChart3 },
+    { label: 'Analysis', to: '/analysis', icon: BarChart3 },
     { label: 'Q and A', to: '/search?q=questions', icon: CircleHelp },
     { label: 'Account', to: user ? '/admin' : '/admin', icon: CircleUserRound },
   ];

@@ -12,6 +12,7 @@ import PoemDetail from '@/pages/PoemDetail';
 import PoetDetail from '@/pages/PoetDetail';
 import Search from '@/pages/Search';
 import Admin from '@/pages/Admin';
+import Analysis from '@/pages/Analysis';
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
             <Route path="/poem/:id" element={<PoemDetail />} />
             <Route path="/poet/:id" element={<PoetDetail />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/analysis" element={<Analysis />} />
             <Route path="/admin" element={<Admin />} />
           </Routes>
         </Layout>
