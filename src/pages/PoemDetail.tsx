@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Play, Share2, Settings2, Sparkles, BookOpen, ListTree, History, MessageSquare, ChevronRight, ArrowLeft, Type, AlignLeft } from 'lucide-react';
+import { Play, Share2, Settings2, Sparkles, BookOpen, ListTree, History, MessageSquare, ChevronRight, ArrowLeft, Type, AlignLeft, BadgeCheck } from 'lucide-react';
 import { db, doc, getDoc, collection, query, where, limit, getDocs } from '@/lib/firebase';
 import { analyzePoem, askAboutPoem, PoemAnalysis } from '@/lib/gemini';
 import { Button } from '@/components/ui/button';
@@ -272,6 +272,42 @@ export default function PoemDetail() {
                 )}
               </CardContent>
             </Card>
+
+            {/* Mobile Expert Commentary */}
+            {poem.expertCommentary?.name && (
+              <Card className="border-primary/20 lg:hidden">
+                <CardContent className="p-5 space-y-4">
+                  <div className="flex items-center gap-2 font-bold text-primary">
+                    <BadgeCheck size={18} />
+                    Expert Commentary
+                  </div>
+                  {poem.expertCommentary?.highlight && (
+                    <p className="text-sm leading-relaxed text-foreground/90">
+                      {poem.expertCommentary.highlight}
+                    </p>
+                  )}
+                  <div className="flex items-center gap-3">
+                    {poem.expertCommentary?.profilePic ? (
+                      <img
+                        src={poem.expertCommentary.profilePic}
+                        alt={poem.expertCommentary.name}
+                        className="w-12 h-12 rounded-full object-cover border"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-primary/10 border flex items-center justify-center text-primary font-bold">
+                        {poem.expertCommentary.name.charAt(0)}
+                      </div>
+                    )}
+                    <div>
+                      <p className="font-semibold leading-tight">{poem.expertCommentary.name}</p>
+                      {poem.expertCommentary?.credentials && (
+                        <p className="text-xs text-muted-foreground">{poem.expertCommentary.credentials}</p>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Q&A Section */}
             <Card className="border-none bg-muted/30">
