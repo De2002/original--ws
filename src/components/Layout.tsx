@@ -39,7 +39,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const mobileBottomNavItems = [
     { label: 'For You', to: '/', icon: Home },
     { label: 'Thoughts', to: '/search?q=thoughts', icon: PenLine },
-    { label: 'Analysis', to: '/search?q=analysis', icon: BarChart3 },
+    { label: 'Analysis', to: '/analysis', icon: BarChart3 },
     { label: 'Q and A', to: '/search?q=questions', icon: CircleHelp },
     { label: 'Account', to: user ? '/admin' : '/admin', icon: CircleUserRound },
   ];
@@ -135,7 +135,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      <footer className="border-t py-12 bg-muted/30">
+      <footer className="hidden md:block border-t py-12 bg-muted/30">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-4">
@@ -181,15 +181,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               ? currentPath === '/'
               : currentPath === itemPath && (!itemQuery || itemQuery === currentQuery);
             const Icon = item.icon;
+            const itemClassName = cn(
+              'flex flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors',
+              isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
+            );
+
             return (
-              <Link
-                key={item.label}
-                to={item.to}
-                className={cn(
-                  'flex flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors',
-                  isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
-                )}
-              >
+              <Link key={item.label} to={item.to} className={itemClassName}>
                 <Icon size={18} />
                 <span>{item.label}</span>
               </Link>
