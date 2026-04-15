@@ -105,7 +105,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             className="text-3xl sm:text-5xl md:text-7xl font-serif font-bold tracking-tight leading-tight"
           >
-            Where Every Word <br /> <span className="italic text-sky-300">Resonates</span>
+            Search the Poetry Library <br /> <span className="italic text-sky-300">by poem, line, or poet</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -113,13 +113,65 @@ export default function Home() {
             transition={{ delay: 0.1 }}
             className="text-base sm:text-xl text-primary-foreground/80 max-w-2xl mx-auto font-sans"
           >
-            Wordstack is a modern classic poetry library built around discovery, comprehension, and atmosphere.
+            A robust search-first experience with category targeting and autocomplete so you can land on the exact poem you need fast.
           </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="flex flex-wrap justify-center gap-2"
+          >
+            {(['poems', 'lines', 'poets'] as const).map((category) => (
+              <Button
+                key={category}
+                type="button"
+                variant={searchCategory === category ? 'secondary' : 'outline'}
+                className="capitalize rounded-full px-5 border-white/50 text-primary-foreground hover:bg-white hover:text-primary"
+                onClick={() => setSearchCategory(category)}
+              >
+                Search in {category}
+              </Button>
+            ))}
+          </motion.div>
+
+          <motion.form
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            onSubmit={handleHomepageSearch}
+            className="max-w-3xl mx-auto flex flex-col sm:flex-row gap-3"
+          >
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+              <input
+                type="text"
+                list="home-search-suggestions"
+                placeholder={
+                  searchCategory === 'poets'
+                    ? 'Try: Emily Dickinson, Walt Whitman...'
+                    : 'Try: The Raven, hope is the thing with feathers...'
+                }
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
+                className="w-full h-12 rounded-xl border border-white/30 bg-white pl-11 pr-4 text-base text-foreground outline-none ring-0 focus:border-white"
+              />
+              <datalist id="home-search-suggestions">
+                {autocompleteSuggestions.map((suggestion) => (
+                  <option key={suggestion} value={suggestion} />
+                ))}
+              </datalist>
+            </div>
+            <Button type="submit" className="h-12 px-6 bg-white text-primary hover:bg-white/90">
+              Search
+              <ArrowRight size={16} />
+            </Button>
+          </motion.form>
           
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.25 }}
             className="flex flex-wrap justify-center gap-4"
           >
             {THEMES.map((theme) => (
@@ -132,62 +184,6 @@ export default function Home() {
             ))}
           </motion.div>
         </div>
-      </section>
-
-      {/* Search Engine Card */}
-      <section>
-        <Card className="border-none shadow-xl bg-gradient-to-b from-card to-muted/20">
-          <CardContent className="p-6 sm:p-8 space-y-6">
-            <div className="space-y-2">
-              <p className="text-primary font-bold uppercase tracking-widest text-sm">Search Engine</p>
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold">Find any poem, line, or poet in seconds</h2>
-              <p className="text-muted-foreground">
-                Start with a keyword and choose where to search. Autocomplete helps you land on the right result faster.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {(['poems', 'lines', 'poets'] as const).map((category) => (
-                <Button
-                  key={category}
-                  type="button"
-                  variant={searchCategory === category ? 'default' : 'outline'}
-                  className="capitalize rounded-full px-5"
-                  onClick={() => setSearchCategory(category)}
-                >
-                  Search in {category}
-                </Button>
-              ))}
-            </div>
-
-            <form onSubmit={handleHomepageSearch} className="space-y-4">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                <input
-                  type="text"
-                  list="home-search-suggestions"
-                  placeholder={
-                    searchCategory === 'poets'
-                      ? 'Try: Emily Dickinson, Walt Whitman...'
-                      : 'Try: The Raven, hope is the thing with feathers...'
-                  }
-                  value={searchInput}
-                  onChange={(event) => setSearchInput(event.target.value)}
-                  className="w-full h-12 rounded-xl border bg-background pl-11 pr-4 text-base outline-none ring-0 focus:border-primary"
-                />
-                <datalist id="home-search-suggestions">
-                  {autocompleteSuggestions.map((suggestion) => (
-                    <option key={suggestion} value={suggestion} />
-                  ))}
-                </datalist>
-              </div>
-              <Button type="submit" className="w-full sm:w-auto gap-2">
-                Search {searchCategory}
-                <ArrowRight size={16} />
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
       </section>
 
       {/* Featured Poem of the Day */}
