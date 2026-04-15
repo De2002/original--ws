@@ -141,7 +141,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             onSubmit={handleHomepageSearch}
-            className="max-w-3xl mx-auto flex flex-col sm:flex-row gap-2.5"
+            className="max-w-3xl mx-auto flex flex-col sm:flex-row gap-3"
           >
             <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
@@ -155,7 +155,7 @@ export default function Home() {
                 }
                 value={searchInput}
                 onChange={(event) => setSearchInput(event.target.value)}
-                className="w-full h-11 rounded-xl border border-white/30 bg-white pl-11 pr-4 text-sm sm:text-base text-foreground outline-none ring-0 focus:border-white"
+                className="w-full h-12 rounded-xl border border-white/30 bg-white pl-11 pr-4 text-base text-foreground outline-none ring-0 focus:border-white"
               />
               <datalist id="home-search-suggestions">
                 {autocompleteSuggestions.map((suggestion) => (
@@ -163,7 +163,7 @@ export default function Home() {
                 ))}
               </datalist>
             </div>
-            <Button type="submit" className="h-11 px-5 bg-white text-primary hover:bg-white/90">
+            <Button type="submit" className="h-12 px-6 bg-white text-primary hover:bg-white/90">
               Search
               <ArrowRight size={16} />
             </Button>
