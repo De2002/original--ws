@@ -169,7 +169,41 @@ export default function Home() {
             View All <ArrowRight size={16} />
           </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="space-y-3 md:hidden">
+          {loading ? (
+            Array(3).fill(0).map((_, i) => <Skeleton key={i} className="h-28 rounded-2xl" />)
+          ) : (
+            popularPoems.slice(0, 3).map((poem, index) => (
+              <motion.div key={poem.id} whileTap={{ scale: 0.98 }}>
+                <Link to={`/poem/${poem.id}`}>
+                  <Card className="border-none shadow-sm">
+                    <CardContent className="p-3">
+                      <div className="flex items-center gap-3">
+                        <span className="text-4xl font-serif font-bold leading-none text-primary/70 w-8 text-center">
+                          {index + 1}
+                        </span>
+                        <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                          <img
+                            src={poem.imageUrl || `https://picsum.photos/seed/${poem.title}/600/400`}
+                            alt={poem.title}
+                            className="object-cover w-full h-full"
+                            referrerPolicy="no-referrer"
+                          />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h4 className="text-base font-serif font-bold truncate">{poem.title}</h4>
+                          <p className="text-sm text-muted-foreground truncate">{poem.poetName}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </motion.div>
+            ))
+          )}
+        </div>
+
+        <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {loading ? (
             Array(3).fill(0).map((_, i) => <Skeleton key={i} className="h-64 rounded-2xl" />)
           ) : (
