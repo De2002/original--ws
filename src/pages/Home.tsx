@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Search, ArrowRight, Sparkles, Wind, Heart, Skull, Shield, Zap, History, Clock, Globe } from 'lucide-react';
 import { db, collection, getDocs, query, limit, orderBy } from '@/lib/firebase';
@@ -27,9 +27,12 @@ const THEMES = [
 const MOODS = ['Melancholic', 'Joyful', 'Pensive', 'Heroic', 'Serene', 'Dark'];
 
 export default function Home() {
+  const navigate = useNavigate();
   const [featuredPoem, setFeaturedPoem] = useState<any>(null);
   const [popularPoems, setPopularPoems] = useState<any[]>([]);
   const [famousPoets, setFamousPoets] = useState<any[]>([]);
+  const [searchInput, setSearchInput] = useState('');
+  const [searchCategory, setSearchCategory] = useState<'poems' | 'lines' | 'poets'>('poems');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -53,6 +56,39 @@ export default function Home() {
     fetchData();
   }, []);
 
+  const autocompleteSuggestions = React.useMemo(() => {
+    if (!searchInput.trim()) return [];
+    const q = searchInput.toLowerCase();
+
+    const poemSuggestions = popularPoems
+      .flatMap((poem) => [poem.title, poem.content])
+      .filter((value): value is string => Boolean(value))
+      .filter((value) => value.toLowerCase().includes(q));
+
+    const poetSuggestions = famousPoets
+      .map((poet) => poet.name)
+      .filter((value): value is string => Boolean(value))
+      .filter((value) => value.toLowerCase().includes(q));
+
+    const byCategory = searchCategory === 'poets'
+      ? poetSuggestions
+      : [...poemSuggestions, ...poetSuggestions];
+
+    return Array.from(new Set(byCategory)).slice(0, 8);
+  }, [famousPoets, popularPoems, searchCategory, searchInput]);
+
+  const handleHomepageSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const queryValue = searchInput.trim();
+    if (!queryValue) return;
+
+    const params = new URLSearchParams({ q: queryValue });
+    if (searchCategory === 'poets') {
+      params.set('type', 'poet');
+    }
+    navigate(`/search?${params.toString()}`);
+  };
+
   return (
     <div className="space-y-16 pb-16">
       <Helmet>
@@ -61,40 +97,94 @@ export default function Home() {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative py-12 sm:py-16 lg:py-20 overflow-hidden rounded-2xl sm:rounded-3xl bg-primary text-primary-foreground">
+      <section className="relative py-6 sm:py-8 lg:py-10 overflow-hidden rounded-2xl sm:rounded-3xl bg-primary text-primary-foreground">
         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]"></div>
-        <div className="relative container mx-auto px-4 sm:px-8 text-center space-y-6 sm:space-y-8">
+        <div className="relative container mx-auto px-4 sm:px-8 text-center">
+          <div className="max-w-4xl mx-auto rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 p-4 sm:p-6 space-y-4 sm:space-y-5">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-3xl sm:text-5xl md:text-7xl font-serif font-bold tracking-tight leading-tight"
+            className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold tracking-tight leading-tight"
           >
-            Where Every Word <br /> <span className="italic text-sky-300">Resonates</span>
+            Search the Poetry Library <br /> <span className="italic text-sky-300">by poem, line, or poet</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-base sm:text-xl text-primary-foreground/80 max-w-2xl mx-auto font-sans"
+            className="text-sm sm:text-base text-primary-foreground/80 max-w-2xl mx-auto font-sans"
           >
-            Wordstack is a modern classic poetry library built around discovery, comprehension, and atmosphere.
+            A robust search-first experience with category targeting and autocomplete so you can land on the exact poem you need fast.
           </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="flex flex-wrap justify-center gap-2"
+          >
+            {(['poems', 'lines', 'poets'] as const).map((category) => (
+              <Button
+                key={category}
+                type="button"
+                variant={searchCategory === category ? 'secondary' : 'outline'}
+                className="capitalize rounded-full px-5 border-white/50 text-primary-foreground hover:bg-white hover:text-primary"
+                onClick={() => setSearchCategory(category)}
+              >
+                Search in {category}
+              </Button>
+            ))}
+          </motion.div>
+
+          <motion.form
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            onSubmit={handleHomepageSearch}
+            className="max-w-3xl mx-auto flex flex-col sm:flex-row gap-2.5"
+          >
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+              <input
+                type="text"
+                list="home-search-suggestions"
+                placeholder={
+                  searchCategory === 'poets'
+                    ? 'Try: Emily Dickinson, Walt Whitman...'
+                    : 'Try: The Raven, hope is the thing with feathers...'
+                }
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
+                className="w-full h-11 rounded-xl border border-white/30 bg-white pl-11 pr-4 text-sm sm:text-base text-foreground outline-none ring-0 focus:border-white"
+              />
+              <datalist id="home-search-suggestions">
+                {autocompleteSuggestions.map((suggestion) => (
+                  <option key={suggestion} value={suggestion} />
+                ))}
+              </datalist>
+            </div>
+            <Button type="submit" className="h-11 px-5 bg-white text-primary hover:bg-white/90">
+              Search
+              <ArrowRight size={16} />
+            </Button>
+          </motion.form>
           
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.25 }}
             className="flex flex-wrap justify-center gap-4"
           >
             {THEMES.map((theme) => (
               <Link key={theme.name} to={`/search?theme=${theme.name}`}>
-                <Badge variant="secondary" className="px-4 py-2 text-sm gap-2 hover:bg-white hover:text-primary transition-colors cursor-pointer">
+                <Badge variant="secondary" className="px-3 py-1.5 text-xs sm:text-sm gap-2 hover:bg-white hover:text-primary transition-colors cursor-pointer">
                   {theme.icon}
                   {theme.name}
                 </Badge>
               </Link>
             ))}
           </motion.div>
+          </div>
         </div>
       </section>
 
