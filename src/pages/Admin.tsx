@@ -17,6 +17,13 @@ export default function Admin() {
   const [showPoetForm, setShowPoetForm] = useState(false);
   const [showPoemForm, setShowPoemForm] = useState(false);
 
+  const buildDefaultExpertCommentary = (poemTitle: string, poetName: string) => ({
+    highlight: `A close reading of "${poemTitle}" reveals how ${poetName} layers imagery, tone, and symbolism to deepen the poem's emotional impact.`,
+    name: 'Editorial Notes Team',
+    credentials: 'Wordstack Poetry Editors',
+    profilePic: '',
+  });
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
       setUser(u);
@@ -210,6 +217,18 @@ That kept so many warm -`,
 
       for (const p of initialPoets) await setDoc(doc(db, 'poets', p.id), p);
       for (const p of initialPoems) await setDoc(doc(db, 'poems', p.id), p);
+
+      // Backfill expert commentary for any existing poem docs that don't have it yet.
+      const allPoemsSnap = await getDocs(collection(db, 'poems'));
+      for (const poemDoc of allPoemsSnap.docs) {
+        const poem = poemDoc.data() as any;
+        if (!poem.expertCommentary?.highlight && !poem.expertCommentary?.name) {
+          await setDoc(doc(db, 'poems', poemDoc.id), {
+            ...poem,
+            expertCommentary: buildDefaultExpertCommentary(poem.title || 'Untitled', poem.poetName || 'Unknown Poet'),
+          });
+        }
+      }
       
       toast.success("Seeding complete!");
       fetchData();
