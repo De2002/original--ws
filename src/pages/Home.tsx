@@ -97,13 +97,14 @@ export default function Home() {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative py-12 sm:py-16 lg:py-20 overflow-hidden rounded-2xl sm:rounded-3xl bg-primary text-primary-foreground">
+      <section className="relative py-6 sm:py-8 lg:py-10 overflow-hidden rounded-2xl sm:rounded-3xl bg-primary text-primary-foreground">
         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]"></div>
-        <div className="relative container mx-auto px-4 sm:px-8 text-center space-y-6 sm:space-y-8">
+        <div className="relative container mx-auto px-4 sm:px-8 text-center">
+          <div className="max-w-4xl mx-auto rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 p-4 sm:p-6 space-y-4 sm:space-y-5">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-3xl sm:text-5xl md:text-7xl font-serif font-bold tracking-tight leading-tight"
+            className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold tracking-tight leading-tight"
           >
             Search the Poetry Library <br /> <span className="italic text-sky-300">by poem, line, or poet</span>
           </motion.h1>
@@ -111,7 +112,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-base sm:text-xl text-primary-foreground/80 max-w-2xl mx-auto font-sans"
+            className="text-sm sm:text-base text-primary-foreground/80 max-w-2xl mx-auto font-sans"
           >
             A robust search-first experience with category targeting and autocomplete so you can land on the exact poem you need fast.
           </motion.p>
@@ -176,13 +177,14 @@ export default function Home() {
           >
             {THEMES.map((theme) => (
               <Link key={theme.name} to={`/search?theme=${theme.name}`}>
-                <Badge variant="secondary" className="px-4 py-2 text-sm gap-2 hover:bg-white hover:text-primary transition-colors cursor-pointer">
+                <Badge variant="secondary" className="px-3 py-1.5 text-xs sm:text-sm gap-2 hover:bg-white hover:text-primary transition-colors cursor-pointer">
                   {theme.icon}
                   {theme.name}
                 </Badge>
               </Link>
             ))}
           </motion.div>
+          </div>
         </div>
       </section>
 
