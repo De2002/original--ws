@@ -280,35 +280,35 @@ export default function PoemDetail() {
               </CardContent>
             </Card>
 
-            {/* Expert Commentary */}
-            {hasExpertCommentary && (
-              <Card className="border-primary/20">
+            {/* Mobile Expert Commentary */}
+            {poem.expertCommentary?.name && (
+              <Card className="border-primary/20 lg:hidden">
                 <CardContent className="p-5 space-y-4">
                   <div className="flex items-center gap-2 font-bold text-primary">
                     <BadgeCheck size={18} />
                     Expert Commentary
                   </div>
-                  {expertCommentary?.highlight && (
+                  {poem.expertCommentary?.highlight && (
                     <p className="text-sm leading-relaxed text-foreground/90">
-                      {expertCommentary.highlight}
+                      {poem.expertCommentary.highlight}
                     </p>
                   )}
                   <div className="flex items-center gap-3">
-                    {expertCommentary?.profilePic ? (
+                    {poem.expertCommentary?.profilePic ? (
                       <img
-                        src={expertCommentary.profilePic}
-                        alt={expertCommentary.name || 'Expert'}
+                        src={poem.expertCommentary.profilePic}
+                        alt={poem.expertCommentary.name}
                         className="w-12 h-12 rounded-full object-cover border"
                       />
                     ) : (
                       <div className="w-12 h-12 rounded-full bg-primary/10 border flex items-center justify-center text-primary font-bold">
-                        {(expertCommentary?.name || 'E').charAt(0)}
+                        {poem.expertCommentary.name.charAt(0)}
                       </div>
                     )}
                     <div>
-                      <p className="font-semibold leading-tight">{expertCommentary?.name || 'Guest Expert'}</p>
-                      {expertCommentary?.credentials && (
-                        <p className="text-xs text-muted-foreground">{expertCommentary.credentials}</p>
+                      <p className="font-semibold leading-tight">{poem.expertCommentary.name}</p>
+                      {poem.expertCommentary?.credentials && (
+                        <p className="text-xs text-muted-foreground">{poem.expertCommentary.credentials}</p>
                       )}
                     </div>
                   </div>
