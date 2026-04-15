@@ -29,6 +29,13 @@ export default function PoemDetail() {
   const [lineHeight, setLineHeight] = useState(1.6);
   const [showSettings, setShowSettings] = useState(false);
   const [relatedPoems, setRelatedPoems] = useState<any[]>([]);
+  const expertCommentary = poem?.expertCommentary;
+  const hasExpertCommentary = Boolean(
+    expertCommentary?.highlight ||
+    expertCommentary?.name ||
+    expertCommentary?.credentials ||
+    expertCommentary?.profilePic
+  );
 
   useEffect(() => {
     async function fetchPoem() {
