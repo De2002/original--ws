@@ -1,6 +1,12 @@
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY;
+
+if (!GEMINI_API_KEY) {
+  console.warn("Gemini API key is missing. Set VITE_GEMINI_API_KEY in your environment.");
+}
+
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY || "");
 
 export interface PoemAnalysis {
   summary: string;
@@ -10,6 +16,10 @@ export interface PoemAnalysis {
 }
 
 export async function analyzePoem(title: string, poet: string, content: string): Promise<PoemAnalysis> {
+  if (!GEMINI_API_KEY) {
+    throw new Error("Gemini API key is not configured");
+  }
+
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash",
     generationConfig: {
@@ -53,6 +63,10 @@ Return the response in JSON format.`;
 }
 
 export async function askAboutPoem(title: string, poet: string, content: string, question: string): Promise<string> {
+  if (!GEMINI_API_KEY) {
+    throw new Error("Gemini API key is not configured");
+  }
+
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   const prompt = `You are an expert literary critic. A user has a question about the poem "${title}" by ${poet}.
