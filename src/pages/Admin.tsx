@@ -87,6 +87,12 @@ export default function Admin() {
       mood: formData.get('mood') as string,
       imageUrl: formData.get('imageUrl') as string,
       audioUrl: formData.get('audioUrl') as string,
+      expertCommentary: {
+        highlight: formData.get('expertHighlight') as string,
+        name: formData.get('expertName') as string,
+        credentials: formData.get('expertCredentials') as string,
+        profilePic: formData.get('expertProfilePic') as string,
+      },
     };
 
     try {
@@ -167,7 +173,13 @@ As of some one gently rapping, rapping at my chamber door.
           era: 'Romantic',
           themes: ['Death', 'Loss', 'Madness'],
           mood: 'Melancholic',
-          imageUrl: 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?q=80&w=2070&auto=format&fit=crop'
+          imageUrl: 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?q=80&w=2070&auto=format&fit=crop',
+          expertCommentary: {
+            highlight: 'Poe uses the raven as a relentless refrain to externalize the speaker’s grief until language itself becomes a haunted chamber.',
+            name: 'Dr. Helena Marks',
+            credentials: 'PhD in 19th-Century American Literature',
+            profilePic: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&auto=format&fit=crop'
+          }
         },
         {
           id: 'hope-is-the-thing-with-feathers',
@@ -186,7 +198,13 @@ That kept so many warm -`,
           era: 'Romantic',
           themes: ['Hope', 'Nature', 'Resilience'],
           mood: 'Serene',
-          imageUrl: 'https://images.unsplash.com/photo-1444464666168-49d633b867ad?q=80&w=2069&auto=format&fit=crop'
+          imageUrl: 'https://images.unsplash.com/photo-1444464666168-49d633b867ad?q=80&w=2069&auto=format&fit=crop',
+          expertCommentary: {
+            highlight: 'Dickinson’s bird is not fragile optimism but a resilient internal force that sings most clearly in crisis.',
+            name: 'Prof. Anita Rowe',
+            credentials: 'Professor of American Poetry, Amherst Studies',
+            profilePic: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop'
+          }
         }
       ];
 
@@ -283,6 +301,30 @@ That kept so many warm -`,
                   <div className="space-y-2">
                     <label className="text-sm font-bold">Image URL</label>
                     <Input name="imageUrl" defaultValue={editingPoem?.imageUrl} />
+                  </div>
+                  <div className="space-y-2 md:col-span-2 pt-2">
+                    <h4 className="text-sm font-bold text-primary">Expert Commentary (Mobile)</h4>
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <label className="text-sm font-bold">Expert Highlight</label>
+                    <textarea
+                      name="expertHighlight"
+                      defaultValue={editingPoem?.expertCommentary?.highlight}
+                      className="w-full h-24 p-3 rounded-md border bg-background"
+                      placeholder="Short expert insight shown under Smart Analysis on mobile."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold">Expert Name</label>
+                    <Input name="expertName" defaultValue={editingPoem?.expertCommentary?.name} />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold">Expert Credentials</label>
+                    <Input name="expertCredentials" defaultValue={editingPoem?.expertCommentary?.credentials} />
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <label className="text-sm font-bold">Expert Profile Pic URL</label>
+                    <Input name="expertProfilePic" defaultValue={editingPoem?.expertCommentary?.profilePic} />
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2 md:col-span-2 pt-4">
                     <Button type="submit" className="gap-2 w-full sm:w-auto"><Save size={18} /> Save Poem</Button>
